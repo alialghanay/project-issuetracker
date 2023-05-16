@@ -4,12 +4,14 @@ const express     = require('express');
 const bodyParser  = require('body-parser');
 const expect      = require('chai').expect;
 const cors        = require('cors');
+const mongoose    = require('mongoose');
 require('dotenv').config();
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
-
+const myDb              = require('./db.js');
+const Schema            = require('./routes/schema.js');
 let app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
@@ -33,18 +35,24 @@ app.route('/')
     res.sendFile(process.cwd() + '/views/index.html');
   });
 
+
 //For FCC testing purposes
 fccTestingRoutes(app);
 
+// my data base conncation
+myDb();
+
 //Routing for API 
-apiRoutes(app);  
-    
+apiRoutes(app);
+
 //404 Not Found Middleware
 app.use(function(req, res, next) {
   res.status(404)
     .type('text')
     .send('Not Found');
 });
+
+
 
 //Start our server and tests!
 const listener = app.listen(process.env.PORT || 3000, function () {
