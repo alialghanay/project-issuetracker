@@ -31,7 +31,7 @@ async function schemaCreate(create) {
 
 async function schemaUpdate(item) {
     let id;
-    if(!item['_id']) id = {"_id": item['_id']};
+    if(item['_id']) id = {"_id": item['_id']};
     try {
         let cleanItem = objCleaner(item);
         let newItem = {
@@ -39,7 +39,7 @@ async function schemaUpdate(item) {
             updated_on: Date.now()
         }
         const data = await Schema.findOneAndUpdate(id, newItem, {new: true});
-        return {"result":"successfully updated", id};
+        return {"result":"successfully updated", ...id};
     } catch(err) {
         return {"error":err.message, ...id};
     }
@@ -49,10 +49,9 @@ async function schemaDelete(item) {
     try {
         let newItem = objDeleteError(item);
         const data = await Schema.deleteOne(newItem).exec();
-        let result = "deleted " + newItem["_id"];
-        return {"result": result, ...newItem};
+        return {"result": "successfully deleted", ...newItem};
     } catch(err) {
-        return {"result":err.message, ...item};
+        return {"error":err.message, ...item};
     }
 }
 

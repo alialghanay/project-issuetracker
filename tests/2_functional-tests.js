@@ -63,13 +63,25 @@ suite('Functional Tests', function() {
         });
       });
 
-      test('No body', function(done) {
+      test('missing _id', function(done) {
         chai.request(server)
         .put('/api/issues/test')
         .send({
         })
         .end(function(err, res){
-          assert.equal(res.body, 'no updated field sent')
+          assert.deepEqual(res.body, {error: 'missing _id'})
+          done()
+        });
+      });
+
+      test('No body', function(done) {
+        chai.request(server)
+        .put('/api/issues/test')
+        .send({
+          _id: id2
+        })
+        .end(function(err, res){
+          assert.equal(res.body.error, 'no update field(s) sent')
           done()
         });
       });
@@ -83,7 +95,7 @@ suite('Functional Tests', function() {
           issue_text: 'new text'
         })
         .end(function(err, res){
-          assert.equal(res.body, 'successfully updated')
+          assert.deepEqual(res.body, {result:'successfully updated', _id: id2})
           done()
         });
       });
@@ -94,7 +106,7 @@ suite('Functional Tests', function() {
         .send({
         })
         .end(function(err, res){
-          assert.equal(res.body, 'id error')
+          assert.deepEqual(res.body, {"error": 'missing _id'})
           done()
         });
       });
@@ -106,7 +118,7 @@ suite('Functional Tests', function() {
           _id: id1
         })
         .end(function(err, res){
-          assert.equal(res.body, 'deleted '+ id1)
+          assert.deepEqual(res.body, {result:'successfully deleted', _id: id1})
         });
         chai.request(server)
         .delete('/api/issues/test')
@@ -114,7 +126,7 @@ suite('Functional Tests', function() {
           _id: id2
         })
         .end(function(err, res){
-          assert.equal(res.body, 'deleted '+ id2)
+          assert.deepEqual(res.body, {result:'successfully deleted', _id: id2})
           done()
         });
       });

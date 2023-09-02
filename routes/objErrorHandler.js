@@ -4,7 +4,7 @@ function objCreateError(obj) {
 }
 
 function objDeleteError(obj) {
-    if(!obj["_id"] || obj["_id"] === null || obj["_id"] === undefined) throw new Error("id error");
+    if(!obj["_id"] || obj["_id"] === null || obj["_id"] === undefined) throw new Error("missing _id");
     for (var propName in obj) {
       if (obj[propName] === null || obj[propName] === undefined || !obj[propName]) {
         delete obj[propName];
@@ -15,6 +15,7 @@ function objDeleteError(obj) {
 
 function objCleaner(obj) {
   if(!obj["_id"] || obj["_id"] === null || obj["_id"] === undefined) throw new Error("missing _id");
+  else delete obj["_id"];
   for (var propName in obj) {
     if (obj[propName] === null || obj[propName] === undefined || !obj[propName]) {
       delete obj[propName];

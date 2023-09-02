@@ -28,7 +28,7 @@ module.exports = function (app) {
     .delete(function (req, res){
       let body = req.body;
       schemaDelete(body).then((d) => {
-        res.status(200).json(d.result);
+        res.status(200).json(d);
       });
     });
     
