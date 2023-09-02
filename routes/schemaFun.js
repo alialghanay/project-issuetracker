@@ -1,7 +1,6 @@
 const Schema     = require('./schema.js');
-const objCleaner = require('./objCleaner.js');
 const { status } = require('express/lib/response.js');
-const objErrorHandler = require('./objErrorHandler.js');
+const {objCreateError, objCleaner, objDeleteError, } = require('./objErrorHandler.js');
 
 async function schemafind(project) {
     try {
@@ -14,21 +13,19 @@ async function schemafind(project) {
 
 async function schemaCreate(create) {
     try {
+        let createCheck = objCreateError(create);
         const data = await Schema.create({
-            issue_title: create.issue_title,
-            issue_text: create.issue_text,
-            created_by: create.created_by,
-            assigned_to: create.assigned_to || "",
-            status_text: create.status_text || "",
-            project: create.project,
+            issue_title: createCheck.issue_title,
+            issue_text: createCheck.issue_text,
+            created_by: createCheck.created_by,
+            assigned_to: createCheck.assigned_to || "",
+            status_text: createCheck.status_text || "",
+            project: createCheck.project,
             updated_on: new Date(0)
         });
         return data;
     } catch(err) {
-        if(!create.issue_title || !create.issue_text || !create.created_by){
-            return 'Required fields missing from request';
-          }
-        return err;
+        return { error: err.message };
     }
 }
 
@@ -49,7 +46,7 @@ async function schemaUpdate(item) {
 
 async function schemaDelete(item) {
     try {
-        let newItem = objErrorHandler(item);
+        let newItem = objDeleteError(item);
         const data = await Schema.deleteOne(newItem).exec();
         let result = "deleted " + newItem["_id"];
         return {"result": result, ...newItem};

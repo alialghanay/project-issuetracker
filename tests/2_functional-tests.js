@@ -58,7 +58,7 @@ suite('Functional Tests', function() {
           issue_title: 'Title'
         })
         .end(function(err, res){
-          assert.equal(res.body, 'Required fields missing from request')
+          assert.deepEqual(res.body, { error: 'required field(s) missing' })
             done()
         });
       });
