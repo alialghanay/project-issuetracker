@@ -13,7 +13,7 @@ const runner            = require('./test-runner');
 const myDb              = require('./db.js');
 const Schema            = require('./routes/schema.js');
 let app = express();
-
+const { schemafind, schemaCreate, schemaUpdate, schemaDelete } = require('./routes/schemaFun');
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only

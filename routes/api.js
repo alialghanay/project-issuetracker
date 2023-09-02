@@ -14,21 +14,22 @@ module.exports = function (app) {
     .post(function (req, res){
       let create = {...req.body, ...req.params}
       schemaCreate(create).then((d) => {
-        res.status(202).json(d);
+        res.status(200).json(d);
       })
     })
     
     .put(function (req, res){
       let newItem = {...req.body, ...req.params}
       schemaUpdate(newItem).then((d) => {
-        res.json(d);
+        let response = d.result;
+        res.status(200).json(response);
       });
     })
     
     .delete(function (req, res){
       let body = req.body;
       schemaDelete(body).then((d) => {
-        res.json(d);
+        res.status(200).json(d.result);
       });
     });
     

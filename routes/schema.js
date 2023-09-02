@@ -23,8 +23,14 @@ const c1Schema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    status_text: String,
-    project: String
+    status_text: {
+        type: String,
+        default: ""
+    },
+    project: {
+        type: String,
+        default: ""
+    }
   });
 
   module.exports = mongoose.model('c1', c1Schema);
