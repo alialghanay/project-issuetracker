@@ -95,7 +95,7 @@ suite('Functional Tests', function() {
           issue_text: 'new text'
         })
         .end(function(err, res){
-          assert.deepEqual(res.body, {result:'successfully updated', _id: id2})
+          assert.deepEqual(res.body, {result: 'successfully updated', '_id': id2})
           done()
         });
       });

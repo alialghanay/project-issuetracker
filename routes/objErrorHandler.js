@@ -21,7 +21,9 @@ function objCleaner(obj) {
       delete obj[propName];
     }
   }
-  if(Object.keys(obj).length <= 1) throw new Error("no update field(s) sent");
+  let fildes = Object.keys(obj);
+  fildes.splice(fildes.indexOf("project"), 1);
+  if(fildes.length <= 1) throw new Error("no update field(s) sent");
   return obj;
 }
 module.exports = {
