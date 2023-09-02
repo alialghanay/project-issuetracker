@@ -14,13 +14,14 @@ function objDeleteError(obj) {
 }
 
 function objCleaner(obj) {
-  if(!obj["_id"] || obj["_id"] === null || obj["_id"] === undefined) throw new Error("no updated field sent");
+  if(!obj["_id"] || obj["_id"] === null || obj["_id"] === undefined) throw new Error("missing _id");
   for (var propName in obj) {
     if (obj[propName] === null || obj[propName] === undefined || !obj[propName]) {
       delete obj[propName];
     }
   }
-  return obj
+  if(Object.keys(obj).length <= 1) throw new Error("no update field(s) sent");
+  return obj;
 }
 module.exports = {
   objCleaner,

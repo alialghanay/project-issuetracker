@@ -30,7 +30,8 @@ async function schemaCreate(create) {
 }
 
 async function schemaUpdate(item) {
-    let id = {"_id": item['_id']};
+    let id;
+    if(!item['_id']) id = {"_id": item['_id']};
     try {
         let cleanItem = objCleaner(item);
         let newItem = {
@@ -40,7 +41,7 @@ async function schemaUpdate(item) {
         const data = await Schema.findOneAndUpdate(id, newItem, {new: true});
         return {"result":"successfully updated", id};
     } catch(err) {
-        return {"result":err.message, ...id};
+        return {"error":err.message, ...id};
     }
 }
 
