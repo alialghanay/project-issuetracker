@@ -20,7 +20,8 @@ async function schemaCreate(create) {
             created_by: create.created_by,
             assigned_to: create.assigned_to || "",
             status_text: create.status_text || "",
-            project: create.project
+            project: create.project,
+            updated_on: new Date(0)
         });
         return data;
     } catch(err) {
