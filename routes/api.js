@@ -21,8 +21,7 @@ module.exports = function (app) {
     .put(function (req, res){
       let newItem = {...req.body, ...req.params}
       schemaUpdate(newItem).then((d) => {
-        let response = d.result;
-        res.status(200).json(response);
+        res.status(200).json(d);
       });
     })
     
