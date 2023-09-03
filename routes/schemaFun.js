@@ -39,7 +39,8 @@ async function schemaUpdate(item) {
             updated_on: Date.now()
         }
         const data = await Schema.findOneAndUpdate(id, newItem, {new: true});
-        return {"result":"successfully updated", ...id};
+        if(data === null) return {"error":'could not update', ...id};
+        else return {"result":"successfully updated", ...id};
     } catch(err) {
         if(err.message === 'missing _id' || err.message === 'no update field(s) sent') return {error:err.message, ...id};
         else return {"error":'could not update', ...id};
@@ -50,7 +51,8 @@ async function schemaDelete(item) {
     try {
         let newItem = objDeleteError(item);
         const data = await Schema.deleteOne(newItem).exec();
-        return {"result": "successfully deleted", ...newItem};
+        if(data.deletedCount === 0) return {"error":'could not delete', ...item};
+        else return {"result": "successfully deleted", ...newItem};
     } catch(err) {
         if(err.message === 'missing _id') return {error: err.message, ...item}
         else return {"error":'could not delete', ...item};
