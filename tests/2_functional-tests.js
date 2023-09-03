@@ -6,6 +6,7 @@ const server = require('../server');
 chai.use(chaiHttp);
 let id1 = '64f07a79e4292e67209751cb';
 let id2 = '64f07a7f44441d337cdc7951';
+let wrongId = "id";
 suite('Functional Tests', function() {
     test('Every field filled in', function(done) {
         chai.request(server)
@@ -26,7 +27,6 @@ suite('Functional Tests', function() {
            assert.equal(res.body.status_text, 'In QA')
            assert.equal(res.body.project, 'test')
            id1 = res.body._id
-           console.log('id 1 has been set as ' + id1)
            done();
          });
        });
@@ -50,6 +50,34 @@ suite('Functional Tests', function() {
           done();
         });
     });
+
+    test('GET request', function(done) {
+      chai.request(server)
+      .get('/api/issues/test')
+      .end(function(err, res) {
+        assert.typeOf(res.body, 'array');
+        done();
+      })
+    });
+    
+    test('One filters', function(done) {
+      chai.request(server)
+      .get('/api/issues/test?issue_title=Title')
+      .end(function(err, res) {
+        assert.typeOf(res.body, 'array');
+        done();
+      })
+    });
+
+    test('multiple filters', function(done) {
+      chai.request(server)
+      .get('/api/issues/test?issue_title=Title&issue_text=text')
+      .end(function(err, res) {
+        assert.typeOf(res.body, 'array');
+        done();
+      })
+    });
+
 
     test('Missing required fields', function(done) {
         chai.request(server)
@@ -86,6 +114,19 @@ suite('Functional Tests', function() {
         });
       });
 
+      test('One field to update', function(done) {
+        chai.request(server)
+        .put('/api/issues/test')
+        .send({
+          _id: id2,
+          issue_title: 'new title test'
+        })
+        .end(function(err, res){
+          assert.deepEqual(res.body, {result: 'successfully updated', '_id': id2})
+          done()
+        });
+      });
+
       test('Multiple fields to update', function(done) {
         chai.request(server)
         .put('/api/issues/test')
@@ -100,6 +141,20 @@ suite('Functional Tests', function() {
         });
       });
 
+      test('invalid _id: PUT', function(done) {
+        chai.request(server)
+        .put('/api/issues/test')
+        .send({
+          _id: wrongId,
+          issue_title: 'new title test',
+          issue_text: 'new text'
+        })
+        .end(function(err, res){
+          assert.deepEqual(res.body, {error: 'could not update', '_id': wrongId})
+          done()
+        });
+      });
+
       test('No _id', function(done) {
         chai.request(server)
         .delete('/api/issues/test')
@@ -107,6 +162,18 @@ suite('Functional Tests', function() {
         })
         .end(function(err, res){
           assert.deepEqual(res.body, {"error": 'missing _id'})
+          done()
+        });
+      });
+
+      test('invalid _id: DELETE', function(done) {
+        chai.request(server)
+        .delete('/api/issues/test')
+        .send({
+          _id: wrongId
+        })
+        .end(function(err, res){
+          assert.deepEqual(res.body, { error: 'could not delete', '_id': wrongId })
           done()
         });
       });
