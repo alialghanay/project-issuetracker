@@ -48,14 +48,16 @@ async function schemaUpdate(item) {
 }
 
 async function schemaDelete(item) {
+    let id;
+    if(item['_id']) id = {"_id": item['_id']};
     try {
         let newItem = objDeleteError(item);
         const data = await Schema.deleteOne(newItem).exec();
-        if(data.deletedCount === 0) return {"error":'could not delete', ...item};
+        if(data.deletedCount === 0) return {"error":'could not delete', ...id};
         else return {"result": "successfully deleted", ...newItem};
     } catch(err) {
-        if(err.message === 'missing _id') return {error: err.message, ...item}
-        else return {"error":'could not delete', ...item};
+        if(err.message === 'missing _id') return {error: err.message, ...id}
+        else return {"error":'could not delete', ...id};
     }
 }
 
